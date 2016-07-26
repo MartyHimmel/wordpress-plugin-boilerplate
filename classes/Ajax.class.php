@@ -1,7 +1,7 @@
 <?php
 namespace MyPlugin;
 
-defined('ABSPATH') or die('You shall not pass!');
+defined('ABSPATH') or die(__('You shall not pass!', 'my-plugin-text'));
 
 class Ajax {
 
@@ -11,7 +11,8 @@ class Ajax {
 	const NONCE = 'my_plugin_nonce';
 
 	public function __construct() {
-		$this->send_data();
+		add_action('admin_enqueue_scripts', array($this, 'send_data'));
+		add_action('wp_enqueue_scripts', array($this, 'send_data'));
 
 		// List of AJAX actions
 		add_action('wp_ajax_my_plugin_ajax_action', array($this, 'ajax_action'));
@@ -21,7 +22,7 @@ class Ajax {
 	public function ajax_action() {
 		if (!check_ajax_referer(self::NONCE, 'nonce')) {
 			wp_send_json_error(array(
-				'message' => 'Verification failed. Reload the page and try again.'
+				'message' => __('Verification failed. Reload the page and try again.', 'my-plugin-text')
 			));
 		}
 

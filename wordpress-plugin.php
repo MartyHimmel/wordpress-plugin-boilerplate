@@ -8,9 +8,11 @@ namespace MyPlugin;
  * Version: 1.0.0
  * Author: Martin Himmel
  * Author URI: http://www.martyhimmel.me
+ * Text Domain: my-plugin-text
+ * Domain Path: /languages
  */
 
-defined('ABSPATH') or die('You shall not pass!');
+defined('ABSPATH') or die(__('You shall not pass!', 'my-plugin-text'));
 
 // Define global constants for use in the plugin
 define('MY_PLUGIN_PATH', plugin_dir_path(__FILE__));
@@ -23,6 +25,9 @@ class My_Plugin {
 		register_activation_hook(__FILE__, array($this, 'activate_plugin'));
 		register_deactivation_hook(__FILE__, array($this, 'deactivate_plugin'));
 
+		// Load translation files
+		add_action('plugins_loaded', array($this, 'load_translation_files'));
+		
 		$this->load_classes();
 
 		if (is_admin()) {
@@ -119,6 +124,14 @@ class My_Plugin {
 		foreach ($files as $file) {
 			require_once $file;
 		}
+	}
+
+	/**
+	 * Loads the plugin translation files.
+	 */
+	public function load_translation_files() {
+		load_plugin_textdomain('my-plugin-text', false,
+			plugin_basename(dirname(__FILE__)) . '/languages');
 	}
 }
 
