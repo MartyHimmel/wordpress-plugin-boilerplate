@@ -7,31 +7,8 @@ class Admin {
 
 	public function __construct() {
 		add_action('admin_menu', array($this, 'create_admin_menu'));
-		add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'));
-		add_action('admin_enqueue_scripts', array($this, 'add_admin_styles'));
-	}
-
-	/**
-	 * Register and enqueue admin scripts.
-	 */
-	public function add_admin_scripts() {
-		wp_register_script(
-			'my_plugin_admin_scripts',
-			MY_PLUGIN_URL . 'js/admin.js',
-			array('dependency1', 'dependency2', 'etc...')
-		);
-		wp_enqueue_script('my_plugin_admin_scripts');
-	}
-
-	/**
-	 * Register and enqueue admin styles.
-	 */
-	public function add_admin_styles() {
-		wp_register_style(
-			'my_plugin_admin_styles',
-			MY_PLUGIN_URL . 'css/admin.css'
-		);
-		wp_enqueue_style('my_plugin_admin_styles');
+		add_action('admin_enqueue_scripts', array($this, 'register_scripts'));
+		add_action('admin_enqueue_scripts', array($this, 'register_styles'));
 	}
 
 	/**
@@ -69,6 +46,9 @@ class Admin {
 	 * Display the page for the first menu item.
 	 */
 	public function menu_item_1() {
+		// Conditionally load scripts as needed.
+		wp_enqueue_script('my_plugin_admin_scripts');
+
 		require_once MY_PLUGIN_PATH . 'views/admin-page-1.php';
 	}
 
@@ -76,6 +56,30 @@ class Admin {
 	 * Display the page for the second menu item.
 	 */
 	public function menu_item_2() {
+		// Conditionally load styles as needed.
+		wp_enqueue_style('my_plugin_admin_styles');
+
 		require_once MY_PLUGIN_PATH . 'views/admin-page-2.php';
+	}
+
+	/**
+	 * Registers JavaScript files for use.
+	 */
+	public function register_scripts() {
+		wp_register_script(
+			'my_plugin_admin_scripts',
+			MY_PLUGIN_URL . 'js/admin.js',
+			array('dependency1', 'dependency2', 'etc...')
+		);
+	}
+
+	/**
+	 * Registers CSS stylesheets for use.
+	 */
+	public function register_styles() {
+		wp_register_style(
+			'my_plugin_admin_styles',
+			MY_PLUGIN_URL . 'css/admin.css'
+		);
 	}
 }

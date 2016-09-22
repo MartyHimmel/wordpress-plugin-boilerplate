@@ -20,11 +20,7 @@ class Ajax {
 	}
 
 	public function ajax_action() {
-		if (!check_ajax_referer(self::NONCE, 'nonce')) {
-			wp_send_json_error(array(
-				'message' => __('Verification failed. Reload the page and try again.', 'my-plugin-text')
-			));
-		}
+		$this->verify_nonce();
 
 		// Do something
 	}
@@ -39,6 +35,14 @@ class Ajax {
 			wp_localize_script('my_plugin_admin_scripts', 'my_plugin_ajax', $send_data);
 		} else {
 			wp_localize_script('my_plugin_scripts', 'my_plugin_ajax', $send_data);
+		}
+	}
+
+	public function verify_nonce() {
+		if (!check_ajax_referer(self::NONCE, 'nonce')) {
+			wp_send_json_error(array(
+				'message' => __('Verification failed. Reload the page and try again.', 'my-plugin-text')
+			));
 		}
 	}
 }

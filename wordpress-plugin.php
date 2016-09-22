@@ -14,12 +14,18 @@ namespace MyPlugin;
 
 defined('ABSPATH') or die(__('You shall not pass!', 'my-plugin-text'));
 
-// Define global constants for use in the plugin
+// Define global path and URL for use in the plugin
 define('MY_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('MY_PLUGIN_URL', plugins_url('/', __FILE__));
+
+// Define database tables
 define('MY_DATABASE_TABLE_1', 'my_database_table_1');
 
 class My_Plugin {
+
+	// Define constants for database table versioning - an option name and the version number
+	const MY_DATABASE_TABLE_VERSION_NAME = 'my_database_table_version';
+	const MY_DATABASE_TABLE_VERSION = 1;
 
 	public function __construct() {
 		register_activation_hook(__FILE__, array($this, 'activate_plugin'));
@@ -33,8 +39,8 @@ class My_Plugin {
 		if (is_admin()) {
 			new Admin();
 		} else {
-			add_action('wp_enqueue_scripts', array($this, 'add_scripts'));
-			add_action('wp_enqueue_scripts', array($this, 'add_styles'));
+			add_action('wp_enqueue_scripts', array($this, 'register_scripts'));
+			add_action('wp_enqueue_scripts', array($this, 'register_styles'));
 			new Shortcode();
 		}
 
@@ -51,59 +57,38 @@ class My_Plugin {
 			return;
 		}
 
-		// Do something
-		$this->create_database_table_1();
-	}
+		// Required for dbDelta
+		require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
 
-	/**
-	 * Register and enqueue scripts.
-	 */
-	public function add_scripts() {
-		wp_register_script(
-			'my_plugin_scripts',
-			plugins_url('js/scripts.js', __FILE__),
-			array('dependency1', 'dependency2', 'etc...')
-		);
-		wp_enqueue_script('my_plugin_scripts');
-	}
+		// Get current versions of tables
+		$current_database_table_version = get_option(self::MY_DATABASE_TABLE_VERSION_NAME);
 
-	/**
-	 * Register and enqueue styles.
-	 */
-	public function add_styles() {
-		wp_register_style(
-			'my_plugin_styles',
-			plugins_url('css/styles.css', __FILE__)
-		);
-		wp_enqueue_style('my_plugin_styles');
+		// Create or update database tables
+		if ($current_assessment_table_version != self::ASSESSMENTS_TABLE_VERSION) {
+			$this->database_table_1();
+		}
 	}
 
 	/**
 	 * Creates or updates a database table.
 	 */
-	public function create_database_table_1() {
+	public function database_table_1() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . MY_DATABASE_TABLE_1;
-		$table_version = 1;
-		$version_option_name = $wpdb->prefix . 'my_plugin_table_1_version';
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$current_version = get_option($version_option_name);
 		
-		if ($current_version != $table_version) {
-			$sql = "CREATE TABLE $table_name (
-				id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-				created datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
-				updated datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-				PRIMARY KEY  (id)
-				) $charset_collate;";
+		$sql = "CREATE TABLE $table_name (
+			id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+			created datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			updated datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+			PRIMARY KEY  (id)
+			) $charset_collate;";
 
-			// Required for dbDelta
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			dbDelta($sql);
+		dbDelta($sql);
 
-			update_option($version_option_name, $table_version);
-		}
+		update_option(self::MY_DATABASE_TABLE_VERSION_NAME, self::MY_DATABASE_TABLE_VERSION);
 	}
 
 	/**
@@ -132,6 +117,33 @@ class My_Plugin {
 	public function load_translation_files() {
 		load_plugin_textdomain('my-plugin-text', false,
 			plugin_basename(dirname(__FILE__)) . '/languages');
+	}
+
+	/**
+	 * Register JavaScript files for use.
+	 */
+	public function register_scripts() {
+		wp_register_script(
+			'my_plugin_scripts',
+			plugins_url('js/scripts.js', __FILE__),
+			array('dependency1', 'dependency2', 'etc...')
+		);
+
+		// This can be moved elsewhere to conditionally load it as needed.
+		wp_enqueue_script('my_plugin_scripts');
+	}
+
+	/**
+	 * Register CSS stylesheets for use.
+	 */
+	public function register_styles() {
+		wp_register_style(
+			'my_plugin_styles',
+			plugins_url('css/styles.css', __FILE__)
+		);
+
+		// This can be moved elsewhere to conditionally load it as needed.
+		wp_enqueue_style('my_plugin_styles');
 	}
 }
 
