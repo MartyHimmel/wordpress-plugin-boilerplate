@@ -5,7 +5,7 @@ namespace MyPlugin;
  * Plugin Name: My Plugin
  * Plugin URI: http://www.example.com
  * Description: What the plugin does.
- * Version: 1.0.0
+ * Version: 0.1.0
  * Author: Martin Himmel
  * Author URI: http://www.martyhimmel.me
  * Text Domain: my-plugin-text
