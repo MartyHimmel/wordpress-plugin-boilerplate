@@ -64,7 +64,7 @@ class My_Plugin {
 		$current_database_table_version = get_option(self::MY_DATABASE_TABLE_VERSION_NAME);
 
 		// Create or update database tables
-		if ($current_assessment_table_version != self::ASSESSMENTS_TABLE_VERSION) {
+		if ($current_database_table_version != self::MY_DATABASE_TABLE_VERSION) {
 			$this->database_table_1();
 		}
 	}
