@@ -6,9 +6,9 @@ defined('ABSPATH') or die(__('You shall not pass!', 'my-plugin-text'));
 class Admin {
 
 	public function __construct() {
-		add_action('admin_menu', array($this, 'create_admin_menu'));
-		add_action('admin_enqueue_scripts', array($this, 'register_scripts'));
-		add_action('admin_enqueue_scripts', array($this, 'register_styles'));
+		add_action('admin_menu', [$this, 'create_admin_menu']);
+		add_action('admin_enqueue_scripts', [$this, 'register_scripts']);
+		add_action('admin_enqueue_scripts', [$this, 'register_styles']);
 	}
 
 	/**
@@ -20,7 +20,7 @@ class Admin {
 			'Admin Menu Text',
 			'manage_options',
 			'my-plugin-parent-slug',
-			array($this, 'menu_item_1')
+			[$this, 'menu_item_1']
 		);
 
 		add_submenu_page(
@@ -29,7 +29,7 @@ class Admin {
 			'Admin Menu Text',
 			'manage_options',
 			'my-plugin-parent-slug',
-			array($this, 'menu_item_1')
+			[$this, 'menu_item_1']
 		);
 
 		add_submenu_page(
@@ -38,7 +38,7 @@ class Admin {
 			'Admin Menu Text',
 			'manage_options',
 			'my-plugin-second-item-slug',
-			array($this, 'menu_item_2')
+			[$this, 'menu_item_2']
 		);
 	}
 
@@ -69,7 +69,7 @@ class Admin {
 		wp_register_script(
 			'my_plugin_admin_scripts',
 			MY_PLUGIN_URL . 'js/admin.js',
-			array('dependency1', 'dependency2', 'etc...')
+			['dependency1', 'dependency2', 'etc...']
 		);
 	}
 

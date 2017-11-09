@@ -28,19 +28,19 @@ class My_Plugin {
 	const MY_DATABASE_TABLE_VERSION = 1;
 
 	public function __construct() {
-		register_activation_hook(__FILE__, array($this, 'activate_plugin'));
-		register_deactivation_hook(__FILE__, array($this, 'deactivate_plugin'));
+		register_activation_hook(__FILE__, [$this, 'activate_plugin']);
+		register_deactivation_hook(__FILE__, [$this, 'deactivate_plugin']);
 
 		// Load translation files
-		add_action('plugins_loaded', array($this, 'load_translation_files'));
+		add_action('plugins_loaded', [$this, 'load_translation_files']);
 		
 		$this->load_classes();
 
 		if (is_admin()) {
 			new Admin();
 		} else {
-			add_action('wp_enqueue_scripts', array($this, 'register_scripts'));
-			add_action('wp_enqueue_scripts', array($this, 'register_styles'));
+			add_action('wp_enqueue_scripts', [$this, 'register_scripts']);
+			add_action('wp_enqueue_scripts', [$this, 'register_styles']);
 			new Shortcode();
 		}
 
@@ -102,6 +102,14 @@ class My_Plugin {
 	}
 
 	/**
+	 * Loads the plugin translation files.
+	 */
+	public function load_translation_files() {
+		load_plugin_textdomain('my-plugin-text', false,
+			plugin_basename(dirname(__FILE__)) . '/languages');
+	}
+
+	/**
 	 * Load classes for use in the plugin.
 	 */
 	public function load_classes() {
@@ -112,21 +120,13 @@ class My_Plugin {
 	}
 
 	/**
-	 * Loads the plugin translation files.
-	 */
-	public function load_translation_files() {
-		load_plugin_textdomain('my-plugin-text', false,
-			plugin_basename(dirname(__FILE__)) . '/languages');
-	}
-
-	/**
 	 * Register JavaScript files for use.
 	 */
 	public function register_scripts() {
 		wp_register_script(
 			'my_plugin_scripts',
 			plugins_url('js/scripts.js', __FILE__),
-			array('dependency1', 'dependency2', 'etc...')
+			['dependency1', 'dependency2', 'etc...']
 		);
 
 		// This can be moved elsewhere to conditionally load it as needed.

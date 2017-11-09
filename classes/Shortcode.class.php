@@ -6,7 +6,7 @@ defined('ABSPATH') or die(__('You shall not pass!', 'my-plugin-text'));
 class Shortcode {
 
 	public function __construct() {
-		add_shortcode('my_shortcode', array($this, 'shortcode'));
+		add_shortcode('my_shortcode', [$this, 'shortcode']);
 	}
 
 	/**
