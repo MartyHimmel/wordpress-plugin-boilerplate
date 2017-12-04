@@ -8,4 +8,3 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 global $wpdb;
 $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . MY_DATABASE_TABLE_1);
 delete_option($wpdb->prefix . 'my_plugin_table_1_version');
-?>
