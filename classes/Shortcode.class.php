@@ -10,7 +10,7 @@ class Shortcode {
 	}
 
 	/**
-	 * Run the shortcode
+	 * Run the shortcode.
 	 * @param  array $atts			Array of attributes.
 	 * @param  string $content		Content enclosed in the shortcode.
 	 * @return string
@@ -19,7 +19,7 @@ class Shortcode {
 		// If including HTML or a separate file, use something like this:
 		// ob_start();
 		// echo '<div>Lorem ipsum</div>';
-		// include 'views/somehtmlfile.php';
+		// include 'views/public/somehtmlfile.php';
 		// $html = ob_get_clean();
 		// return $html;
 		return $content;

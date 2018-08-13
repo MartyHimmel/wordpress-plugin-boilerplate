@@ -19,16 +19,20 @@ class Ajax {
 		add_action('wp_ajax_nopriv_my_plugin_ajax_action', [$this, 'ajax_action']);
 	}
 
+	/**
+	 * Make the nonce and WP's admin AJAX url available in JavaScript files.
+	 * @return [type] [description]
+	 */
 	public function send_data() {
 		$send_data = [
-			'ajax_url' => admin_url('admin-ajax.php'),
+			'ajaxUrl' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce(self::NONCE)
 		];
 
 		if (is_admin()) {
-			wp_localize_script('my_plugin_admin_scripts', 'my_plugin_ajax', $send_data);
+			wp_localize_script('my_plugin_admin_scripts', 'myPluginAjax', $send_data);
 		} else {
-			wp_localize_script('my_plugin_scripts', 'my_plugin_ajax', $send_data);
+			wp_localize_script('my_plugin_scripts', 'myPluginAjax', $send_data);
 		}
 	}
 

@@ -49,7 +49,7 @@ class Admin {
 		// Conditionally load scripts as needed.
 		wp_enqueue_script('my_plugin_admin_scripts');
 
-		require_once MY_PLUGIN_PATH . 'views/admin-page-1.php';
+		require_once MY_PLUGIN_PATH . 'views/admin/page-1.php';
 	}
 
 	/**
@@ -59,27 +59,27 @@ class Admin {
 		// Conditionally load styles as needed.
 		wp_enqueue_style('my_plugin_admin_styles');
 
-		require_once MY_PLUGIN_PATH . 'views/admin-page-2.php';
+		require_once MY_PLUGIN_PATH . 'views/admin/page-2.php';
 	}
 
 	/**
-	 * Registers JavaScript files for use.
+	 * Registers admin/back end JavaScript files for use.
 	 */
 	public function register_scripts() {
 		wp_register_script(
 			'my_plugin_admin_scripts',
-			MY_PLUGIN_URL . 'js/admin.js',
+			MY_PLUGIN_URL . 'js/admin/core.js',
 			['dependency1', 'dependency2', 'etc...']
 		);
 	}
 
 	/**
-	 * Registers CSS stylesheets for use.
+	 * Registers admin/back end CSS stylesheets for use.
 	 */
 	public function register_styles() {
 		wp_register_style(
 			'my_plugin_admin_styles',
-			MY_PLUGIN_URL . 'css/admin.css'
+			MY_PLUGIN_URL . 'css/admin/styles.css'
 		);
 	}
 }
